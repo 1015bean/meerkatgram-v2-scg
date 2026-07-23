@@ -1,0 +1,54 @@
+server:
+  port: ${APP_PORT}
+
+spring:
+  application:
+    name: meerkatgram-v2-scg
+    version: v1
+  web:
+    error:
+      include-stacktrace: always
+      include-message: always
+  # SCG(spring cloud gateway)
+  cloud:
+    gateway:
+      server:
+        webflux:  # 필터링 처리 관련
+          default-filters:  # 모든 요청에 대해서 이 처리를 해라(기본적인 역할이 라우팅 처리이므로)
+            - name: RequestSize
+              args:
+                maxSize: 20MB
+          globalcors:  # cors 처리
+            cors-configurations:
+              '[/**]':  # 모든 경로에 대해서
+                allowed-origins: ${CORS_ALLOW_ORIGIN}
+                allowed-methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"]  # http메소드이므로 따로 상수로 뺼 필요 없음
+                allowed-headers: "*"
+                allow-credentials: true  # CORS 요청에서 '인증 정보'를 함께 전송할 수 있도록 허용(쿠키, 세션, Authorization 헤더(Bearer Token), TLS 클라이언트 인증서)
+          routes:  # 라우팅 처리 관련
+            - id: ${AUTH_SERVICE_NAME}   # 라우트의 이름(gateway가 구분하기 위한 이름)
+              uri: ${AUTH_SERVICE_URI}  # gateway에서 req를 보내줄 목적지(Auth로 라우팅 처리)
+              predicates:
+                - Path=${AUTH_SERVICE_PREDICATE} # 이 패스로 요청이 오면 라우팅 처리 하겠다
+
+            # `Open API UI`가 각 하위서비스의 스팩을 GateWay가 Origin으로 받아와서 출력하도록 설정
+            - id: ${AUTH_SERVICE_NAME}-docs
+              uri: ${AUTH_SERVICE_URI}  # 이동시킬 목적지
+              predicates:
+                - Path=/${AUTH_SERVICE_NAME}${AUTH_SERVICE_OPEN_API_PATH}  # 이렇게 요청오면 라우팅 처리하겠다
+              filters:
+                - RewritePath=/${AUTH_SERVICE_NAME}${AUTH_SERVICE_OPEN_API_PATH}, ${AUTH_SERVICE_OPEN_API_PATH}  # GET /auth-service/api-docs -> GET /api-docs 바꾸어 라우팅 처리함, 뒤 url이 원래 스웨거 주소이므로
+
+#open API
+springdoc:
+  swagger-ui:
+    path: /docs  # Swagger UI를 보여줄 주소
+    urls:
+      - name: ${AUTH_SERVICE-NAME}
+        url: /${AUTH_SERVICE_NAME}${AUTH_SERVICE_OPEN_API_PATH}
+
+# jwt
+jwt:
+  secret: ${JWT_SECRET}
+  header-key: Authorization
+  scheme: Bearer
