@@ -39,9 +39,9 @@ jobs:
           # 이 워크플로우를 트리거한, 사용자의 GitHubId
           username: ${{ github.actor }}
           password:
-            ${secrets.GITNuB-tokren]
+            ${secrets.GITHUB-TOKEN]
       - name: Build and push image
-        run:
+        run: |
           IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/$IMAGE_NAME
           docker build -t $IMAGE:$GITHUB_RUN_NUMBER .
           docker push $IMAGE:$GITHUB_RUN_NUMBER
