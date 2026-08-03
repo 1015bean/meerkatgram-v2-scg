@@ -3,7 +3,7 @@ name: SCG Build And Deploy
 
 # 이벤트 트리거 정의
 on:
-  # `push 이벤트가 발생` 하면 트리거
+  # `push 이벤트가 발생`하면 트리거
   push:
     # 그 중에서 master 브런치만 push 되었을 때 (다른 브런치 push는 무시)
     branches: [master]
@@ -11,7 +11,6 @@ on:
 env:
   # ghcr.io에 올릴 이미지명 설정
   IMAGE_NAME: scg
-
 
 # 해당 워크플로우가 실행 중 GITHUB_TOKEN에 부여할 권한 설정
 permissions:
@@ -31,18 +30,17 @@ jobs:
         # 현재 레포 코드를 러너로 내려받는 공식 액션
         uses: actions/checkout@v7
       - name: Login to ghcr.io
-        # Docker 레지스트리 로그인을 대신 처리해주는 공식 액션
+        # Docker 레지스트리 로그인을 대신 처리해주는 공식 앤션
         uses: docker/login-action@v4
         with:
-          # 로그인 할 대상 레지스트리 주소
+          # 로그인할 대상 레지스트리 주소
           registry: ghcr.io
           # 이 워크플로우를 트리거한, 사용자의 GitHubId
           username: ${{ github.actor }}
-          password:
-            ${secrets.GITHUB-TOKEN]
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push image
         run: |
           IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/$IMAGE_NAME
           docker build -t $IMAGE:$GITHUB_RUN_NUMBER .
           docker push $IMAGE:$GITHUB_RUN_NUMBER
-        # TODO: 추후 k8s manifest 작성시, 추가 작업 필요
+    # TODO: 추후 k8s manifest 작성시, 추가 작업 필요
