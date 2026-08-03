@@ -35,6 +35,7 @@ public class JwtProvider {
         return Optional.of(bearerToken.substring(jwtConfig.scheme().length()).trim());
     }
 
+    // 토큰 파싱(검증기) 생성
     public Claims extractClaims(String token) {
         try {
             return Jwts.parser()

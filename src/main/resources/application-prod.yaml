@@ -7,8 +7,8 @@ spring:
     version: v1
   web:
     error:
-      include-stacktrace: always
-      include-message: always
+      include-stacktrace: never
+      include-message: never
   # SCG(spring cloud gateway)
   cloud:
     gateway:
