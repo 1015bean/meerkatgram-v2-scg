@@ -44,5 +44,5 @@ jobs:
         run:
           IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/$IMAGE_NAME
           docker build -t $IMAGE:$GITHUB_RUN_NUMBER .
-          docker push #IMAGE:$GITHUB_RUN_NUMBER
+          docker push $IMAGE:$GITHUB_RUN_NUMBER
         # TODO: 추후 k8s manifest 작성시, 추가 작업 필요
