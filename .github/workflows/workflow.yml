@@ -53,7 +53,7 @@ jobs:
         with:
           repository: ${{env.MANIFEST_REPO}}            # pull 받을 대상 레포
           token: ${{secrets.MANIFEST_REPO_TOKEN}}  # 현재 레포지토리와 다르므로 별도로 생성된 매니페스트 레파지토리의 토큰을 셋팅
-          path: manifests                               # 레포지토리를 받아서 작업할 디렉토리를 지정
+          path: manifest                               # 레포지토리를 받아서 작업할 디렉토리를 지정
       - name: update image tag
         run: |
           IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/$IMAGE_NAME
