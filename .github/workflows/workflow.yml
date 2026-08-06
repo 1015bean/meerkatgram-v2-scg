@@ -14,7 +14,7 @@ env:
   # 해당 매니페스트 레포지토리 경로
   MANIFEST_PATH: scg
   # 매니페스트를 올릴 대상 레포
-  MANIFEST_REFO: 1015bean/k8s-manifest
+  MANIFEST_REPO: 1015bean/k8s-manifest
 
 # 해당 워크플로우가 실행 중 GITHUB_TOKEN에 부여할 권한 설정
 permissions:
