@@ -48,7 +48,7 @@ jobs:
           docker build -t $IMAGE:$GITHUB_RUN_NUMBER .
           docker push $IMAGE:$GITHUB_RUN_NUMBER
       # TODO: 추후 k8s manifest 작성시, 추가 작업 필요
-      - name: Checkout msa4-k8s-manifest
+      - name: Checkout k8s-manifest
         uses: actions/checkout@v7
         with:
           repository: ${{env.MANIFEST_REPO}}            # pull 받을 대상 레포
