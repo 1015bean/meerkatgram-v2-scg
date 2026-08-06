@@ -59,7 +59,7 @@ jobs:
           IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/$IMAGE_NAME
           cd manifest/$MANIFEST_PATH
           sed -i "s|image: ${IMAGE}:.*|image: ${IMAGE}:${GITHUB_RUN_NUMBER}|" deployment.yaml
-          git config user.email "acction@github.com"
-          git config user.name "Giithub Actions"
-          git config -am "Deploy ${IMAGE_NAME}:${GITHUB_RUN_NUMBER}"
+          git config user.email "actions@github.com"
+          git config user.name "Github Actions"
+          git commit -am "Deploy ${IMAGE_NAME}:${GITHUB_RUN_NUMBER}"
           git push
