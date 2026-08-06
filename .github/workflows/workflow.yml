@@ -10,7 +10,7 @@ on:
 
 env:
   # ghcr.io에 올릴 이미지명 설정
-  IMAGE_NAME: msa4-scg
+  IMAGE_NAME: scg
   # 해당 매니페스트 레포지토리 경로
   MANIFEST_PATH: scg
   # 매니페스트를 올릴 대상 레포
