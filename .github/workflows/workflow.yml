@@ -10,7 +10,11 @@ on:
 
 env:
   # ghcr.io에 올릴 이미지명 설정
-  IMAGE_NAME: scg
+  IMAGE_NAME: msa4-scg
+  # 해당 매니페스트 레포지토리 경로
+  MANIFEST_PATH: scg
+  # 매니페스트를 올릴 대상 레포
+  MANIFEST_REFO: 1015bean/k8s-manifest
 
 # 해당 워크플로우가 실행 중 GITHUB_TOKEN에 부여할 권한 설정
 permissions:
@@ -43,4 +47,19 @@ jobs:
           IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/$IMAGE_NAME
           docker build -t $IMAGE:$GITHUB_RUN_NUMBER .
           docker push $IMAGE:$GITHUB_RUN_NUMBER
-    # TODO: 추후 k8s manifest 작성시, 추가 작업 필요
+      # TODO: 추후 k8s manifest 작성시, 추가 작업 필요
+      - name: Checkout msa4-k8s-manifest
+        uses: actions/checkout@v7
+        with:
+          repository: ${{env.MANIFEST_REPO}}            # pull 받을 대상 레포
+          token: ${{secrets.msa4-manifest-repo-token}}  # 현재 레포지토리와 다르므로 별도로 생성된 매니페스트 레파지토리의 토큰을 셋팅
+          path: manifests                               # 레포지토리를 받아서 작업할 디렉토리를 지정
+      - name: update image tag
+        run: |
+          IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/$IMAGE_NAME
+          cd manifest/$MANIFEST_PATH
+          sed -i "s|image: ${IMAGE}:.*|image: ${IMAGE}:${GITHUB_RUN_NUMBER}|" deployment.yaml
+          git config user.email "acction@github.com"
+          git config user.name "Giithub Actions"
+          git config -am "Deploy ${IMAGE_NAME}:${GITHUB_RUN_NUMBER}"
+          git push
